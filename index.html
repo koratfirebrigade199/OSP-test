@@ -1,201 +1,830 @@
-<!-- TAB 2: Leader Operation Summary Form -->
-<section id="tab-leader" class="tab-content block">
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-6">
-        <div class="bg-gradient-to-r from-korat-blue to-blue-900 px-6 py-4 text-white flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <i class="fa-solid fa-file-signature text-2xl"></i>
-                <div>
-                    <h2 class="font-semibold text-lg">แบบฟอร์ม 2: รายงานการออกปฏิบัติงาน (บันทึกข้อความ)</h2>
-                    <p class="text-xs text-blue-100">สำหรับหัวหน้าชุดเวรเตรียมพร้อม รวบรวมและสรุปผลเสนอผู้บังคับบัญชา</p>
-                </div>
-            </div>
-            <span class="bg-white/20 px-3 py-1 rounded-full text-xs font-semibold">หัวหน้าชุดเวร</span>
-        </div>
-        <form id="leaderForm" onsubmit="saveLeaderReport(event)" class="p-6 space-y-6">
-            <!-- Section 1: Gov Header Info -->
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4">
-                <h3 class="text-sm font-semibold text-korat-blue flex items-center gap-2 border-b border-slate-200 pb-2">
-                    <i class="fa-solid fa-landmark"></i> ส่วนที่ 1: ข้อมูลส่วนราชการ / เลขที่หนังสือ / วันที่
-                </h3>
-                <div class="grid grid-cols-1 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">ส่วนราชการ <span class="text-red-500">*</span></label>
-                        <select id="gov_department" required class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-korat-blue">
-                            <option value="สถานีดับเพลิงจอมสุรางค์ยาตร์ ฝ่ายปกครอง สำนักปลัดเทศบาล">สถานีดับเพลิงจอมสุรางค์ยาตร์ ฝ่ายปกครอง สำนักปลัดเทศบาล</option>
-                            <option value="สถานีดับเพลิงสุรนารายณ์ ฝ่ายปกครอง สำนักปลัดเทศบาล">สถานีดับเพลิงสุรนารายณ์ ฝ่ายปกครอง สำนักปลัดเทศบาล</option>
-                            <option value="สถานีดับเพลิงการเคหะฯ ฝ่ายปกครอง สำนักปลัดเทศบาล">สถานีดับเพลิงการเคหะฯ ฝ่ายปกครอง สำนักปลัดเทศบาล</option>
-                            <option value="สถานีดับเพลิงศาลาทอง ฝ่ายปกครอง สำนักปลัดเทศบาล">สถานีดับเพลิงศาลาทอง ฝ่ายปกครอง สำนักปลัดเทศบาล</option>
-                            <option value="สถานีดับเพลิงจอมจามจุรี ฝ่ายปกครอง สำนักปลัดเทศบาล">สถานีดับเพลิงจอมจามจุรี ฝ่ายปกครอง สำนักปลัดเทศบาล</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">ที่ (เลขที่หนังสือ) <span class="text-red-500">*</span></label>
-                        <input type="text" id="doc_number" value="นม 52001/" required class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">ลงวันที่ <span class="text-red-500">*</span></label>
-                        <input type="date" id="doc_date" required class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">หัวหน้าชุดเวรเตรียมพร้อมชุดที่ <span class="text-red-500">*</span></label>
-                        <input type="text" id="shift_team_no" value="๑" required class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Section 2: Vehicle Reports Selector & Duty List -->
-            <div class="bg-blue-50/40 p-4 rounded-xl border border-blue-100 space-y-4">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-blue-200 pb-2">
-                    <h3 class="text-sm font-semibold text-korat-blue flex items-center gap-2">
-                        <i class="fa-solid fa-list-check"></i> ส่วนที่ 2: รายการปฏิบัติงาน (สูงสุด 7 รายการ)
-                    </h3>
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <button type="button" onclick="openVehicleSelectorModal()" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 shadow-sm font-medium">
-                            <i class="fa-solid fa-cloud-arrow-down"></i> ดึงข้อมูลจากรายงานการใช้รถยนต์
-                        </button>
-                        <button type="button" onclick="clearAllOpItems()" class="text-xs bg-rose-100 text-rose-700 hover:bg-rose-200 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 font-medium">
-                            <i class="fa-solid fa-eraser"></i> ล้างข้อมูลทั้งหมด
-                        </button>
-                    </div>
-                </div>
-                <!-- 7 Operation entries -->
-                <div id="leader-op-items" class="space-y-3">
-                    <!-- จะถูกสร้างผ่าน JS (initLeaderFormItems) -->
-                </div>
-            </div>
-
-            <!-- Evaluation & Issues -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="md:col-span-3">
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">ผลการออกปฏิบัติงานภาพรวม <span class="text-red-500">*</span></label>
-                    <textarea id="overall_result" rows="2" required placeholder="สรุปผลการออกปฏิบัติงานภาพรวมประจำวัน..." class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-korat-blue">ปฏิบัติงานเป็นไปด้วยความเรียบร้อย สามารถระงับเหตุและช่วยเหลือประชาชนได้อย่างมีประสิทธิภาพ</textarea>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">อุปกรณ์ที่นำไปปฏิบัติงาน <span class="text-red-500">*</span></label>
-                    <select id="equipment_status" class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-korat-blue">
-                        <option value="ใช้การได้ดี">ใช้การได้ดีทุกรายการ</option>
-                        <option value="ชำรุดบางส่วน">ชำรุดบางรายการ</option>
-                        <option value="ต้องปรับปรุงแก้ไข">ต้องปรับปรุง/ซ่อมแซม</option>
-                    </select>
-                </div>
-                <div class="md:col-span-2">
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">ขณะปฏิบัติงานมีปัญหาหรืออุปสรรคหรือไม่ <span class="text-red-500">*</span></label>
-                    <input type="text" id="leader_problems" value="ไม่มีปัญหาและอุปสรรคในการปฏิบัติงาน" class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg">
-                </div>
-            </div>
-
-            <!-- Section 3: Signature & Reporter Name -->
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4">
-                <h3 class="text-sm font-semibold text-korat-blue flex items-center gap-2 border-b border-slate-200 pb-2">
-                    <i class="fa-solid fa-pen-fancy"></i> ส่วนที่ 3: ลงนามรายงาน (หัวหน้าชุดเวรเตรียมพร้อม)
-                </h3>
-                <div class="flex flex-col sm:flex-row gap-4 items-start">
-                    <div class="w-full sm:w-80">
-                        <canvas id="leader-sig-canvas" width="320" height="130" class="sig-canvas w-full"></canvas>
-                        <div class="flex justify-between mt-1.5">
-                            <button type="button" onclick="clearSignature('leader')" class="text-xs text-rose-600 hover:underline flex items-center gap-1">
-                                <i class="fa-solid fa-eraser"></i> ล้างลายเซ็นต์
-                            </button>
-                            <span class="text-xs text-slate-400">เซ็นชื่อหัวหน้าชุดเวร</span>
-                        </div>
-                    </div>
-                    <div class="flex-grow space-y-3 w-full">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">ชื่อ-นามสกุล หัวหน้าชุดเวรผู้รายงาน <span class="text-red-500">*</span></label>
-                            <input type="text" id="leader_name_signed" placeholder="นาย..." required class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">ตำแหน่งในรายงาน <span class="text-red-500">*</span></label>
-                            <input type="text" id="leader_position_title" value="หัวหน้าชุดเวรเตรียมพร้อมชุดที่ ๑" required class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Submit Button -->
-            <div class="flex justify-end pt-4 border-t border-slate-200">
-                <button type="submit" class="bg-gradient-to-r from-korat-blue to-blue-900 text-white font-medium px-6 py-2.5 rounded-xl shadow-md hover:opacity-90 transition flex items-center gap-2">
-                    <i class="fa-solid fa-floppy-disk"></i> บันทึกรายงานการออกปฏิบัติงานประจำวัน
-                </button>
-            </div>
-        </form>
-    </div>
-</section>
-
-<!-- Modal สำหรับเลือกและดึงข้อมูลรายงานการใช้รถยนต์ออกปฏิบัติงาน -->
-<div id="vehicleModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 max-h-[90vh] flex flex-col">
-        <div class="flex justify-between items-center pb-3 border-b border-slate-200">
-            <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
-                <i class="fa-solid fa-car-side text-korat-orange"></i> เลือกรายงานการใช้รถยนต์มาใส่ในรายการปฏิบัติงาน
-            </h3>
-            <button onclick="closeVehicleModal()" class="text-slate-400 hover:text-slate-600">
-                <i class="fa-solid fa-xmark text-xl"></i>
-            </button>
-        </div>
-        <div id="modal-vehicle-list" class="py-4 space-y-2 overflow-y-auto flex-grow">
-            <!-- ข้อมูลรายการใช้รถยนต์จะถูก Render ด้วย JavaScript -->
-        </div>
-        <div class="pt-3 border-t border-slate-200 flex justify-end">
-            <button onclick="closeVehicleModal()" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-300 transition">ปิดหน้าต่าง</button>
-        </div>
-    </div>
-</div>
-
-<!-- JavaScript ส่วนการทำงานเพิ่มเติมสำหรับดึงข้อมูลและดึงลงช่องอัตโนมัติ -->
-<script>
-    // เปิด Modal แสดงรายการบันทึกรถยนต์ทั้งหมด
-    function openVehicleSelectorModal() {
-        const container = document.getElementById('modal-vehicle-list');
-        if(!container) return;
-        
-        if(driverReports.length === 0) {
-            container.innerHTML = `<p class="text-sm text-slate-500 text-center py-6">ยังไม่มีข้อมูลรายงานการใช้รถยนต์ในระบบ</p>`;
-        } else {
-            container.innerHTML = driverReports.map((item) => `
-                <div class="p-3.5 border border-slate-200 rounded-xl hover:bg-orange-50/50 transition flex justify-between items-center text-xs gap-3">
-                    <div class="space-y-1">
-                        <div class="font-bold text-slate-800 text-sm">${formatDateThai(item.date)} | เวลา ${item.startTime} - ${item.endTime} น.</div>
-                        <div class="text-korat-orange font-semibold">${item.vehicleType} (ทะเบียน ${item.vehiclePlate})</div>
-                        <div class="text-slate-600 line-clamp-1">ผลการปฏิบัติงาน: ${item.workResult}</div>
-                        <div class="text-slate-400 text-[11px]">คนขับ: ${item.driverName}</div>
-                    </div>
-                    <button type="button" onclick="selectVehicleForLeader('${item.id}')" class="px-3.5 py-2 bg-korat-blue text-white rounded-lg hover:bg-blue-800 font-medium whitespace-nowrap flex items-center gap-1 shadow-sm">
-                        <i class="fa-solid fa-plus"></i> นำเข้าข้อมูล
-                    </button>
-                </div>
-            `).join('');
-        }
-        document.getElementById('vehicleModal').classList.remove('hidden');
-    }
-
-    function closeVehicleModal() {
-        document.getElementById('vehicleModal').classList.add('hidden');
-    }
-
-    // เมื่อกดเลือก นำข้อมูลมากรอกลงในบรรทัดว่างแรกของแบบฟอร์ม 2 อัตโนมัติ
-    function selectVehicleForLeader(driverId) {
-        const report = driverReports.find(r => r.id === driverId);
-        if(report) {
-            let filled = false;
-            for(let i=1; i<=7; i++) {
-                const actionInput = document.getElementById(`op_action_${i}`);
-                if(actionInput && !actionInput.value.trim()) {
-                    document.getElementById(`op_date_${i}`).value = formatDateThai(report.date);
-                    document.getElementById(`op_time_${i}`).value = `${report.startTime} - ${report.endTime} น.`;
-                    document.getElementById(`op_action_${i}`).value = report.workResult;
-                    document.getElementById(`op_car_${i}`).value = `${report.vehicleType} ทะเบียน ${report.vehiclePlate}`;
-                    filled = true;
-                    showToast(`นำเข้าข้อมูลเรียบร้อยแล้ว (ลงในช่องข้อ ${i})`);
-                    break;
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบบันทึกรายงานการปฏิบัติงานประจำวัน E-Operation Report</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Signature Pad -->
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    <!-- html2pdf.js for Generating A4 PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Google Fonts: TH Sarabun New & Prompt -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=TH+Sarabun+New:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        korat: {
+                            orange: '#F26522',
+                            blue: '#1E3A8A',
+                            navy: '#0F172A',
+                            gold: '#D97706',
+                            light: '#F8FAFC'
+                        }
+                    },
+                    fontFamily: {
+                        prompt: ['Prompt', 'sans-serif'],
+                        sarabun: ['"TH Sarabun New"', '"TH Sarabun PSK"', 'sans-serif']
+                    }
                 }
             }
-            if(!filled) {
-                alert('ช่องรายการปฏิบัติงานเต็มทั้ง 7 ข้อแล้ว กรุณาลบหรือแก้ไขรายการเดิมก่อนดึงข้อมูลเพิ่ม');
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #F1F5F9;
+        }
+        .sig-canvas {
+            border: 2px dashed #CBD5E1;
+            border-radius: 0.5rem;
+            background-color: #FAFAFA;
+            touch-action: none;
+        }
+
+        /* Styling PDF Paper Template for EXACT 100% Match */
+        .pdf-template-container {
+            font-family: 'TH Sarabun New', 'TH Sarabun PSK', sans-serif;
+            color: #000;
+            background: #fff;
+            width: 210mm;
+            box-sizing: border-box;
+        }
+        .pdf-page {
+            width: 210mm;
+            height: 297mm;
+            padding: 20mm 20mm 15mm 25mm; /* Margins: Top Right Bottom Left */
+            box-sizing: border-box;
+            position: relative;
+            background: #fff;
+            page-break-after: always;
+            font-size: 16pt;
+            line-height: 1.45;
+        }
+        .pdf-page:last-child {
+            page-break-after: avoid;
+        }
+        .dotted-line {
+            border-bottom: 1px dotted #333;
+            display: inline-block;
+            padding-0 4px;
+            min-width: 50px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 flex flex-col">
+    <!-- Top Navigation Header -->
+    <header class="bg-gradient-to-r from-korat-navy via-korat-blue to-korat-orange text-white shadow-lg no-print sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center border border-white/20 shadow-inner">
+                    <i class="fa-solid fa-truck-fire text-amber-400 text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg sm:text-xl tracking-tight leading-tight">E-Operation Report</h1>
+                    <p class="text-xs text-orange-200">ระบบบันทึกรายงานการปฏิบัติงานประจำวัน | งานป้องกันและบรรเทาสาธารณภัย เทศบาลนครนครราชสีมา</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button onclick="switchTab('tab-driver')" id="nav-btn-driver" class="px-3.5 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 bg-white/20 text-white shadow">
+                    <i class="fa-solid fa-id-card"></i> <span>1. รายงานพนักงานขับรถ</span>
+                </button>
+                <button onclick="switchTab('tab-leader')" id="nav-btn-leader" class="px-3.5 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 bg-transparent hover:bg-white/10 text-slate-200">
+                    <i class="fa-solid fa-user-shield"></i> <span>2. รายงานหัวหน้าชุดเวร</span>
+                </button>
+                <button onclick="switchTab('tab-history')" id="nav-btn-history" class="px-3.5 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 bg-transparent hover:bg-white/10 text-slate-200">
+                    <i class="fa-solid fa-folder-open"></i> <span>ประวัติ & พิมพ์ PDF</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <!-- Notification Toast -->
+        <div id="toast" class="hidden fixed bottom-5 right-5 z-50 bg-emerald-600 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transition-all">
+            <i class="fa-solid fa-circle-check text-xl"></i>
+            <span id="toast-message" class="text-sm font-medium">บันทึกข้อมูลเรียบร้อยแล้ว</span>
+        </div>
+
+        <!-- TAB 1: Driver Vehicle Operation Form -->
+        <section id="tab-driver" class="tab-content block">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-6">
+                <div class="bg-gradient-to-r from-orange-500 to-amber-600 px-6 py-4 text-white flex justify-between items-center flex-wrap gap-2">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-solid fa-car-side text-2xl"></i>
+                        <div>
+                            <h2 class="font-semibold text-lg">แบบฟอร์ม 1: รายงานการใช้รถยนต์ออกปฏิบัติงาน</h2>
+                            <p class="text-xs text-orange-100">สำหรับเจ้าหน้าที่พนักงานขับรถกรอกข้อมูลการนำรถออกปฏิบัติการ</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="clearDriverForm()" class="bg-white/20 hover:bg-rose-600/80 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 backdrop-blur-sm shadow-sm border border-white/20">
+                            <i class="fa-solid fa-eraser"></i> ล้างข้อมูลทั้งหมด
+                        </button>
+                        <span class="bg-white/20 px-3 py-1.5 rounded-full text-xs font-semibold">พนักงานขับรถ</span>
+                    </div>
+                </div>
+                <form id="driverForm" onsubmit="saveDriverReport(event)" class="p-6 space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">วันที่ปฏิบัติงาน <span class="text-red-500">*</span></label>
+                            <input type="date" id="driver_date" required class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">ชื่อ-นามสกุล (ข้าพเจ้า) <span class="text-red-500">*</span></label>
+                            <input type="text" id="driver_name" placeholder="นาย..." required class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">ตำแหน่ง <span class="text-red-500">*</span></label>
+                            <input type="text" id="driver_position" value="พนักงานขับรถยนต์" required class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-orange-50/50 p-4 rounded-xl border border-orange-100">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">ทำหน้าที่ขับรถยนต์ (ยี่ห้อ/ชนิด) <span class="text-red-500">*</span></label>
+                            <input type="text" id="vehicle_type" placeholder="เช่น รถดับเพลิงอาคาร" required class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">หมายเลขทะเบียน <span class="text-red-500">*</span></label>
+                            <input type="text" id="vehicle_plate" placeholder="เช่น กข 1234 นครราชสีมา" required class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">ตั้งแต่เวลา (น.) <span class="text-red-500">*</span></label>
+                            <input type="text" id="start_time" placeholder="08.30" required class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">ถึงเวลา (น.) <span class="text-red-500">*</span></label>
+                            <input type="text" id="end_time" placeholder="16.30" required class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500">
+                        </div>
+                    </div>
+                    
+                    <!-- Staff lists -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                            <h3 class="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-users text-emerald-600"></i> ผู้ร่วมปฏิบัติงาน (สูงสุด 6 คน)
+                            </h3>
+                            <div class="space-y-2">
+                                <input type="text" class="attending-staff w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg" placeholder="๑. ชื่อ-นามสกุล ผู้ร่วมปฏิบัติงาน">
+                                <input type="text" class="attending-staff w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg" placeholder="๒. ชื่อ-นามสกุล ผู้ร่วมปฏิบัติงาน">
+                                <input type="text" class="attending-staff w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg" placeholder="๓. ชื่อ-นามสกุล ผู้ร่วมปฏิบัติงาน">
+                                <input type="text" class="attending-staff w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg" placeholder="๔. ชื่อ-นามสกุล ผู้ร่วมปฏิบัติงาน">
+                                <input type="text" class="attending-staff w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg" placeholder="๕. ชื่อ-นามสกุล ผู้ร่วมปฏิบัติงาน">
+                                <input type="text" class="attending-staff w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg" placeholder="๖. ชื่อ-นามสกุล ผู้ร่วมปฏิบัติงาน">
+                            </div>
+                        </div>
+                        <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                            <h3 class="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-user-slash text-rose-500"></i> พนักงานประจำรถไม่ออกร่วมปฏิบัติงาน (ถ้ามี)
+                            </h3>
+                            <div class="space-y-3">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    <input type="text" id="absent_name_1" placeholder="๑. ชื่อ-นามสกุล" class="px-3 py-1.5 text-sm border border-slate-300 rounded-lg">
+                                    <input type="text" id="absent_reason_1" placeholder="สาเหตุเนื่องจาก (ลา/ป่วย)" class="px-3 py-1.5 text-sm border border-slate-300 rounded-lg">
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    <input type="text" id="absent_name_2" placeholder="๒. ชื่อ-นามสกุล" class="px-3 py-1.5 text-sm border border-slate-300 rounded-lg">
+                                    <input type="text" id="absent_reason_2" placeholder="สาเหตุเนื่องจาก (ลา/ป่วย)" class="px-3 py-1.5 text-sm border border-slate-300 rounded-lg">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">รายละเอียดการได้นำรถออกปฏิบัติงาน / ผลการปฏิบัติงาน <span class="text-red-500">*</span></label>
+                            <textarea id="driver_work_result" rows="3" required placeholder="ระบุภารกิจและสถานที่ปฏิบัติงาน..." class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">อุปสรรคและปัญหา</label>
+                            <textarea id="driver_problems" rows="3" placeholder="ระบุอุปสรรคและปัญหาในการปฏิบัติงาน..." class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500">-</textarea>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-slate-200 pt-4">
+                        <h3 class="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-pen-nib text-korat-blue"></i> ลายเซ็นต์ดิจิทัล พนักงานขับรถผู้รายงาน
+                        </h3>
+                        <div class="flex flex-col sm:flex-row gap-4 items-start">
+                            <div class="w-full sm:w-80">
+                                <canvas id="driver-sig-canvas" width="320" height="130" class="sig-canvas w-full"></canvas>
+                                <div class="flex justify-between mt-1.5">
+                                    <button type="button" onclick="clearSignature('driver')" class="text-xs text-rose-600 hover:underline flex items-center gap-1">
+                                        <i class="fa-solid fa-eraser"></i> ล้างลายเซ็นต์
+                                    </button>
+                                    <span class="text-xs text-slate-400">ใช้นิ้วหรือเมาส์เซ็นชื่อ</span>
+                                </div>
+                            </div>
+                            <div class="flex-grow space-y-3 w-full">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 mb-1">พิมพ์ชื่อ-นามสกุล กำกับลายเซ็น <span class="text-red-500">*</span></label>
+                                    <input type="text" id="driver_name_signed" placeholder="นาย..." required class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 mb-1">เรียน หัวหน้าสถานีดับเพลิง <span class="text-red-500">*</span></label>
+                                    <select id="driver_target_station" required class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500">
+                                        <option value="สถานีดับเพลิงจอมสุรางค์ยาตร์">สถานีดับเพลิงจอมสุรางค์ยาตร์</option>
+                                        <option value="สถานีดับเพลิงสุรนารายณ์">สถานีดับเพลิงสุรนารายณ์</option>
+                                        <option value="สถานีดับเพลิงการเคหะฯ">สถานีดับเพลิงการเคหะฯ</option>
+                                        <option value="สถานีดับเพลิงศาลาทอง">สถานีดับเพลิงศาลาทอง</option>
+                                        <option value="สถานีดับเพลิงจามจุรี">สถานีดับเพลิงจามจุรี</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-3 pt-4 border-t border-slate-200">
+                        <button type="submit" class="bg-gradient-to-r from-orange-500 to-amber-600 text-white font-medium px-6 py-2.5 rounded-xl shadow-md hover:opacity-90 transition flex items-center gap-2">
+                            <i class="fa-solid fa-file-pdf"></i> บันทึกข้อมูลและออก PDF ทันที
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- TAB 2: Leader Operation Summary Form -->
+        <section id="tab-leader" class="tab-content hidden">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-6">
+                <div class="bg-gradient-to-r from-korat-blue to-blue-900 px-6 py-4 text-white flex justify-between items-center">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-solid fa-file-signature text-2xl"></i>
+                        <div>
+                            <h2 class="font-semibold text-lg">แบบฟอร์ม 2: รายงานการออกปฏิบัติงาน (บันทึกข้อความ)</h2>
+                            <p class="text-xs text-blue-100">สำหรับหัวหน้าชุดเวรเตรียมพร้อม รวบรวมและสรุปผลเสนอผู้บังคับบัญชา</p>
+                        </div>
+                    </div>
+                    <span class="bg-white/20 px-3 py-1 rounded-full text-xs font-semibold">หัวหน้าชุดเวร</span>
+                </div>
+                <form id="leaderForm" onsubmit="saveLeaderReport(event)" class="p-6 space-y-6">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4">
+                        <h3 class="text-sm font-semibold text-korat-blue flex items-center gap-2 border-b border-slate-200 pb-2">
+                            <i class="fa-solid fa-landmark"></i> ส่วนที่ 1: ข้อมูลส่วนราชการ / เลขที่หนังสือ / วันที่
+                        </h3>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">ส่วนราชการ <span class="text-red-500">*</span></label>
+                            <select id="gov_department" required class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-korat-blue">
+                                <option value="สถานีดับเพลิงจอมสุรางค์ยาตร์">สถานีดับเพลิงจอมสุรางค์ยาตร์</option>
+                                <option value="สถานีดับเพลิงสุรนารายณ์">สถานีดับเพลิงสุรนารายณ์</option>
+                                <option value="สถานีดับเพลิงการเคหะฯ">สถานีดับเพลิงการเคหะฯ</option>
+                                <option value="สถานีดับเพลิงศาลาทอง">สถานีดับเพลิงศาลาทอง</option>
+                                <option value="สถานีดับเพลิงจามจุรี">สถานีดับเพลิงจามจุรี</option>
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">ที่ (เลขที่หนังสือ) <span class="text-red-500">*</span></label>
+                                <input type="text" id="doc_number" value="นม 52001/" required class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">ลงวันที่ <span class="text-red-500">*</span></label>
+                                <input type="date" id="doc_date" required class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">หัวหน้าชุดเวรเตรียมพร้อมชุดที่ <span class="text-red-500">*</span></label>
+                                <input type="text" id="shift_team_no" value="1" required class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-blue-50/40 p-4 rounded-xl border border-blue-100 space-y-4">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-blue-200 pb-2">
+                            <h3 class="text-sm font-semibold text-korat-blue flex items-center gap-2">
+                                <i class="fa-solid fa-list-check"></i> ส่วนที่ 2: รายการปฏิบัติงาน (สูงสุด 7 รายการ)
+                            </h3>
+                        </div>
+                        <div id="leader-op-items" class="space-y-3">
+                            <!-- Operation item rows -->
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="md:col-span-3">
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">ผลการออกปฏิบัติงานภาพรวม <span class="text-red-500">*</span></label>
+                            <textarea id="overall_result" rows="2" required class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg">ปฏิบัติงานเป็นไปด้วยความเรียบร้อย สามารถระงับเหตุและช่วยเหลือประชาชนได้อย่างมีประสิทธิภาพ</textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">อุปกรณ์ที่นำไปปฏิบัติงาน <span class="text-red-500">*</span></label>
+                            <select id="equipment_status" class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg">
+                                <option value="ใช้การได้ดีทุกรายการ">ใช้การได้ดีทุกรายการ</option>
+                                <option value="ชำรุดบางรายการ">ชำรุดบางรายการ</option>
+                                <option value="ต้องปรับปรุง/ซ่อมแซม">ต้องปรับปรุง/ซ่อมแซม</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">ขณะปฏิบัติงานมีปัญหาหรืออุปสรรคหรือไม่ <span class="text-red-500">*</span></label>
+                            <input type="text" id="leader_problems" value="ไม่มีปัญหาและอุปสรรคในการปฏิบัติงาน" class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg">
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4">
+                        <h3 class="text-sm font-semibold text-korat-blue flex items-center gap-2 border-b border-slate-200 pb-2">
+                            <i class="fa-solid fa-pen-fancy"></i> ส่วนที่ 3: ลงนามรายงาน (หัวหน้าชุดเวร)
+                        </h3>
+                        <div class="flex flex-col sm:flex-row gap-4 items-start">
+                            <div class="w-full sm:w-80">
+                                <canvas id="leader-sig-canvas" width="320" height="130" class="sig-canvas w-full"></canvas>
+                                <div class="flex justify-between mt-1.5">
+                                    <button type="button" onclick="clearSignature('leader')" class="text-xs text-rose-600 hover:underline">ล้างลายเซ็นต์</button>
+                                </div>
+                            </div>
+                            <div class="flex-grow space-y-3 w-full">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 mb-1">ชื่อ-นามสกุล หัวหน้าชุดเวร <span class="text-red-500">*</span></label>
+                                    <input type="text" id="leader_name_signed" required class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 mb-1">ตำแหน่งในรายงาน <span class="text-red-500">*</span></label>
+                                    <input type="text" id="leader_position_title" value="หัวหน้าชุดเวรเตรียมพร้อมชุดที่ 1" required class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end pt-4 border-t border-slate-200">
+                        <button type="submit" class="bg-gradient-to-r from-korat-blue to-blue-900 text-white font-medium px-6 py-2.5 rounded-xl shadow-md hover:opacity-90 transition flex items-center gap-2">
+                            <i class="fa-solid fa-floppy-disk"></i> บันทึกรายงานการออกปฏิบัติงาน
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- TAB 3: History & Export PDF Reports -->
+        <section id="tab-history" class="tab-content hidden">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800">รายการบันทึกรายงานประจำวัน</h2>
+                    <p class="text-xs text-slate-500">จัดการข้อมูล พิมพ์ไฟล์ PDF รายวันตรงตามแบบฟอร์ม 100% (TH Sarabun ขนาด 16)</p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="exportAllDriverPDF()" class="px-3.5 py-2 bg-orange-600 text-white rounded-lg text-xs font-medium hover:bg-orange-700 transition flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-solid fa-file-pdf"></i> พิมพ์ PDF รถยนต์ทั้งหมด (ต่อรายวัน)
+                    </button>
+                    <button onclick="loadMockData()" class="px-3 py-1.5 bg-slate-200 text-slate-700 rounded-lg text-xs font-medium hover:bg-slate-300 transition flex items-center gap-1">
+                        <i class="fa-solid fa-database"></i> โหลดตัวอย่าง
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Driver Reports Card -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 lg:col-span-2">
+                    <div class="flex justify-between items-center mb-4 border-b pb-3">
+                        <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-car text-korat-orange"></i> รายงานการใช้รถยนต์ออกปฏิบัติงาน (พนักงานขับรถ)
+                        </h3>
+                        <span id="driver-count-badge" class="bg-orange-100 text-orange-800 text-xs px-2.5 py-0.5 rounded-full font-semibold">0 รายการ</span>
+                    </div>
+                    <div id="driver-reports-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Rendered via JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Hidden Render Area for PDF Generation -->
+    <div style="display: none;">
+        <div id="pdf-render-area" class="pdf-template-container"></div>
+    </div>
+
+    <!-- Application Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-4 text-center text-xs border-t border-slate-800 no-print mt-auto">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>งานป้องกันและบรรเทาสาธารณภัย / ฝ่ายปกครอง สำนักปลัดเทศบาล เทศบาลนครนครราชสีมา</p>
+            <p class="mt-1 text-slate-500">E-Operation Report System © 2026 Nakhon Ratchasima City Municipality.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        let driverSigPad = null;
+        let leaderSigPad = null;
+        let driverReports = [];
+        let leaderReports = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initSignaturePads();
+            initLeaderFormItems();
+            loadStoredData();
+            
+            const today = new Date().toISOString().split('T')[0];
+            const driverDateInput = document.getElementById('driver_date');
+            const docDateInput = document.getElementById('doc_date');
+            if(driverDateInput) driverDateInput.value = today;
+            if(docDateInput) docDateInput.value = today;
+        });
+
+        function initSignaturePads() {
+            const driverCanvas = document.getElementById('driver-sig-canvas');
+            const leaderCanvas = document.getElementById('leader-sig-canvas');
+            if (driverCanvas) driverSigPad = new SignaturePad(driverCanvas, { backgroundColor: 'rgb(255, 255, 255)' });
+            if (leaderCanvas) leaderSigPad = new SignaturePad(leaderCanvas, { backgroundColor: 'rgb(255, 255, 255)' });
+        }
+
+        function clearSignature(type) {
+            if (type === 'driver' && driverSigPad) driverSigPad.clear();
+            if (type === 'leader' && leaderSigPad) leaderSigPad.clear();
+        }
+
+        function clearDriverForm() {
+            if(confirm('คุณต้องการล้างข้อมูลในแบบฟอร์มการใช้รถยนต์ทั้งหมดใช่หรือไม่?')) {
+                const form = document.getElementById('driverForm');
+                if(form) form.reset();
+                if (driverSigPad) driverSigPad.clear();
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('driver_date').value = today;
+                document.getElementById('driver_position').value = "พนักงานขับรถยนต์";
+                document.getElementById('driver_problems').value = "-";
+                showToast('ล้างข้อมูลเรียบร้อยแล้ว');
             }
         }
-        closeVehicleModal();
-    }
-</script>
+
+        function initLeaderFormItems() {
+            const container = document.getElementById('leader-op-items');
+            if(!container) return;
+            container.innerHTML = '';
+            for(let i=1; i<=7; i++) {
+                const row = document.createElement('div');
+                row.className = "bg-white p-3 rounded-xl border border-blue-100 text-xs shadow-sm space-y-2 md:space-y-0";
+                row.innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center">
+                        <div class="font-bold text-slate-700 md:col-span-1">ข้อ ${i}.</div>
+                        <div class="md:col-span-2">
+                            <input type="text" id="op_date_${i}" placeholder="วันที่/เดือน/พ.ศ." class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg">
+                        </div>
+                        <div class="md:col-span-2">
+                            <input type="text" id="op_time_${i}" placeholder="เวลา...น.-...น." class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg">
+                        </div>
+                        <div class="md:col-span-4">
+                            <input type="text" id="op_action_${i}" placeholder="ออกปฏิบัติงาน..." class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg">
+                        </div>
+                        <div class="md:col-span-3">
+                            <input type="text" id="op_car_${i}" placeholder="รถทะเบียน..." class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg">
+                        </div>
+                    </div>
+                `;
+                container.appendChild(row);
+            }
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            const target = document.getElementById(tabId);
+            if(target) target.classList.remove('hidden');
+            const btns = { 'tab-driver': 'nav-btn-driver', 'tab-leader': 'nav-btn-leader', 'tab-history': 'nav-btn-history' };
+            Object.keys(btns).forEach(key => {
+                const btn = document.getElementById(btns[key]);
+                if(btn) btn.className = key === tabId ? "px-3.5 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 bg-white/20 text-white shadow" : "px-3.5 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 bg-transparent hover:bg-white/10 text-slate-200";
+            });
+        }
+
+        function saveDriverReport(e) {
+            e.preventDefault();
+            const staffInputs = document.querySelectorAll('.attending-staff');
+            const attendingStaff = Array.from(staffInputs).map(input => input.value.trim()).filter(val => val !== '');
+            const absentStaff = [];
+            const abs1 = document.getElementById('absent_name_1').value.trim();
+            if(abs1) absentStaff.push({ name: abs1, reason: document.getElementById('absent_reason_1').value.trim() });
+            const abs2 = document.getElementById('absent_name_2').value.trim();
+            if(abs2) absentStaff.push({ name: abs2, reason: document.getElementById('absent_reason_2').value.trim() });
+            
+            let sigData = driverSigPad && !driverSigPad.isEmpty() ? driverSigPad.toDataURL() : null;
+
+            const report = {
+                id: 'DRV-' + Date.now(),
+                date: document.getElementById('driver_date').value,
+                driverName: document.getElementById('driver_name').value,
+                driverPosition: document.getElementById('driver_position').value,
+                vehicleType: document.getElementById('vehicle_type').value,
+                vehiclePlate: document.getElementById('vehicle_plate').value,
+                startTime: document.getElementById('start_time').value,
+                endTime: document.getElementById('end_time').value,
+                attendingStaff: attendingStaff,
+                absentStaff: absentStaff,
+                workResult: document.getElementById('driver_work_result').value,
+                problems: document.getElementById('driver_problems').value,
+                driverNameSigned: document.getElementById('driver_name_signed').value,
+                targetStation: document.getElementById('driver_target_station').value,
+                signatureImg: sigData,
+                timestamp: new Date().toISOString()
+            };
+
+            driverReports.unshift(report);
+            persistData();
+            showToast('บันทึกรายงานการใช้รถยนต์เรียบร้อย');
+            renderHistoryLists();
+            
+            // Generate PDF Automatically for this entry
+            generateDriverPDF([report], `รายงานการใช้รถยนต์_${report.driverName}_${report.date}.pdf`);
+        }
+
+        function saveLeaderReport(e) {
+            e.preventDefault();
+            const opItems = [];
+            for(let i=1; i<=7; i++) {
+                const dateVal = document.getElementById(`op_date_${i}`).value.trim();
+                const actionVal = document.getElementById(`op_action_${i}`).value.trim();
+                if(dateVal || actionVal) {
+                    opItems.push({
+                        no: i,
+                        date: dateVal,
+                        time: document.getElementById(`op_time_${i}`).value.trim(),
+                        action: actionVal,
+                        car: document.getElementById(`op_car_${i}`).value.trim()
+                    });
+                }
+            }
+
+            let sigData = leaderSigPad && !leaderSigPad.isEmpty() ? leaderSigPad.toDataURL() : null;
+
+            const report = {
+                id: 'LDR-' + Date.now(),
+                department: document.getElementById('gov_department').value,
+                docNumber: document.getElementById('doc_number').value,
+                docDate: document.getElementById('doc_date').value,
+                shiftTeamNo: document.getElementById('shift_team_no').value,
+                opItems: opItems,
+                overallResult: document.getElementById('overall_result').value,
+                equipmentStatus: document.getElementById('equipment_status').value,
+                problems: document.getElementById('leader_problems').value,
+                leaderNameSigned: document.getElementById('leader_name_signed').value,
+                leaderPositionTitle: document.getElementById('leader_position_title').value,
+                signatureImg: sigData,
+                timestamp: new Date().toISOString()
+            };
+
+            leaderReports.unshift(report);
+            persistData();
+            showToast('บันทึกรายงานการออกปฏิบัติงานเรียบร้อย');
+            renderHistoryLists();
+            switchTab('tab-history');
+        }
+
+        function renderHistoryLists() {
+            const driverListEl = document.getElementById('driver-reports-list');
+            const driverBadge = document.getElementById('driver-count-badge');
+            if(driverBadge) driverBadge.textContent = `${driverReports.length} รายการ`;
+            
+            if(driverListEl) {
+                if(driverReports.length === 0) {
+                    driverListEl.innerHTML = `<p class="text-xs text-slate-400 text-center py-6 col-span-2">ยังไม่มีรายงานการใช้รถยนต์ออกปฏิบัติงาน</p>`;
+                } else {
+                    driverListEl.innerHTML = driverReports.map(item => `
+                        <div class="p-4 border border-slate-200 rounded-xl bg-slate-50 hover:border-korat-orange transition space-y-2">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span class="text-xs font-bold text-orange-600">${item.vehicleType} (${item.vehiclePlate})</span>
+                                    <div class="text-sm font-semibold text-slate-800">วันที่ ${formatDateThai(item.date)}</div>
+                                    <div class="text-xs text-slate-500">เวลา ${item.startTime} น. - ${item.endTime} น.</div>
+                                    <div class="text-xs text-slate-600 mt-1">ผู้รายงาน: <strong>${item.driverName}</strong> (${item.driverPosition})</div>
+                                </div>
+                                <div class="flex flex-col gap-1.5">
+                                    <button onclick="downloadSingleDriverPDF('${item.id}')" class="px-3 py-1.5 bg-rose-600 text-white text-xs font-medium rounded-lg hover:bg-rose-700 flex items-center justify-center gap-1 shadow-sm">
+                                        <i class="fa-solid fa-file-pdf"></i> ดาวน์โหลด PDF
+                                    </button>
+                                    <button onclick="deleteReport('driver', '${item.id}')" class="px-3 py-1 bg-slate-200 text-slate-600 text-xs rounded-lg hover:bg-rose-100 hover:text-rose-600">
+                                        <i class="fa-solid fa-trash"></i> ลบ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+        }
+
+        function deleteReport(type, id) {
+            if(confirm('คุณต้องการลบรายงานนี้หรือไม่?')) {
+                if(type === 'driver') driverReports = driverReports.filter(r => r.id !== id);
+                else leaderReports = leaderReports.filter(r => r.id !== id);
+                persistData();
+                renderHistoryLists();
+                showToast('ลบรายการเรียบร้อยแล้ว');
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            if(toastMsg) toastMsg.textContent = msg;
+            if(toast) {
+                toast.classList.remove('hidden');
+                setTimeout(() => toast.classList.add('hidden'), 3500);
+            }
+        }
+
+        function formatDateThai(dateStr) {
+            if(!dateStr) return '';
+            const d = new Date(dateStr);
+            const months = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+            return `${d.getDate()} ${months[d.getMonth()]} พ.ศ. ${d.getFullYear() + 543}`;
+        }
+
+        function parseDateComponents(dateStr) {
+            if(!dateStr) return { day: '..........', month: '........................', year: '..........' };
+            const d = new Date(dateStr);
+            const months = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+            return {
+                day: d.getDate().toString(),
+                month: months[d.getMonth()],
+                year: (d.getFullYear() + 543).toString()
+            };
+        }
+
+        function persistData() {
+            localStorage.setItem('e_report_drivers', JSON.stringify(driverReports));
+            localStorage.setItem('e_report_leaders', JSON.stringify(leaderReports));
+        }
+
+        function loadStoredData() {
+            const d = localStorage.getItem('e_report_drivers');
+            const l = localStorage.getItem('e_report_leaders');
+            if(d) driverReports = JSON.parse(d);
+            if(l) leaderReports = JSON.parse(l);
+            if(driverReports.length === 0 && leaderReports.length === 0) loadMockData();
+            else renderHistoryLists();
+        }
+
+        function loadMockData() {
+            driverReports = [getMockDriverReport()];
+            persistData();
+            renderHistoryLists();
+            showToast('โหลดข้อมูลตัวอย่างเรียบร้อยแล้ว');
+        }
+
+        function getMockDriverReport() {
+            return {
+                id: 'DRV-MOCK-1',
+                date: new Date().toISOString().split('T')[0],
+                driverName: 'สมชาย ใจดี',
+                driverPosition: 'พนักงานขับรถยนต์',
+                vehicleType: 'บรรทุกน้ำดับเพลิง',
+                vehiclePlate: 'กข 5678 นครราชสีมา',
+                startTime: '08.30',
+                endTime: '16.30',
+                attendingStaff: ['นายวิชัย รักชาติ', 'นายประสิทธิ์ มีสุข', 'นายอนันต์ มั่นคง'],
+                absentStaff: [{ name: 'นายณรงค์ สายชล', reason: 'ลากิจ' }],
+                workResult: 'ออกตรวจจุดเสี่ยงและดับเพลิงหญ้าแห้งบริเวณริมถนนมิตรภาพ',
+                problems: 'การจราจรติดขัดช่วงชั่วโมงเร่งด่วน',
+                driverNameSigned: 'สมชาย ใจดี',
+                targetStation: 'สถานีดับเพลิงจอมสุรางค์ยาตร์',
+                signatureImg: null,
+                timestamp: new Date().toISOString()
+            };
+        }
+
+        // ==========================================
+        // PDF GENERATION LOGIC (EXACT FORM 100% MATCH)
+        // ==========================================
+
+        function downloadSingleDriverPDF(id) {
+            const item = driverReports.find(r => r.id === id);
+            if (!item) return;
+            generateDriverPDF([item], `รายงานการใช้รถยนต์_${item.driverName}_${item.date}.pdf`);
+        }
+
+        function exportAllDriverPDF() {
+            if (driverReports.length === 0) {
+                alert('ไม่มีข้อมูลรายงานการใช้รถยนต์');
+                return;
+            }
+            generateDriverPDF(driverReports, `รายงานการใช้รถยนต์ทั้งหมด_${new Date().toISOString().split('T')[0]}.pdf`);
+        }
+
+        function generateDriverPDF(reportList, filename) {
+            const renderArea = document.getElementById('pdf-render-area');
+            renderArea.innerHTML = '';
+
+            const thaiNumbers = ['๑', '๒', '๓', '๔', '๕', '๖'];
+
+            reportList.forEach((item) => {
+                const dateParts = parseDateComponents(item.date);
+                const page = document.createElement('div');
+                page.className = 'pdf-page';
+
+                const staffList = item.attendingStaff || [];
+                const getStaffText = (idx) => staffList[idx] || '';
+
+                const absList = item.absentStaff || [];
+                const abs1 = absList[0] || { name: '', reason: '' };
+                const abs2 = absList[1] || { name: '', reason: '' };
+
+                page.innerHTML = `
+                    <div style="text-align: center; margin-bottom: 25px;">
+                        <div style="font-size: 20pt; font-weight: bold; line-height: 1.2;">รายงานการใช้รถยนต์ออกปฎิบัติงาน</div>
+                        <div style="font-size: 18pt; font-weight: bold; line-height: 1.2;">ฝ่ายปกครอง สำนักปลัดเทศบาล เทศบาลนครนครราชสีมา</div>
+                        <div style="margin-top: 5px;">........................................................................................................................................................................</div>
+                    </div>
+
+                    <div style="margin-bottom: 12px; text-indent: 2.5em;">
+                        ข้าพเจ้า <span class="dotted-line" style="min-width: 220px; font-weight: bold;">${item.driverName || ''}</span>
+                        ตำแหน่ง <span class="dotted-line" style="min-width: 200px;">${item.driverPosition || ''}</span>
+                    </div>
+
+                    <div style="margin-bottom: 12px;">
+                        ทำหน้าที่ขับรถยนต์ <span class="dotted-line" style="min-width: 170px; font-weight: bold;">${item.vehicleType || ''}</span>
+                        หมายเลขทะเบียน <span class="dotted-line" style="min-width: 170px; font-weight: bold;">${item.vehiclePlate || ''}</span>
+                    </div>
+
+                    <div style="margin-bottom: 12px;">
+                        ในวันที่ <span class="dotted-line" style="min-width: 50px;">${dateParts.day}</span>
+                        เดือน <span class="dotted-line" style="min-width: 120px;">${dateParts.month}</span>
+                        พ.ศ. <span class="dotted-line" style="min-width: 70px;">${dateParts.year}</span>
+                        ได้นำรถออกปฏิบัติงาน <span class="dotted-line" style="min-width: 160px;">${item.workResult || ''}</span>
+                    </div>
+
+                    <div style="margin-bottom: 14px;">
+                        ออกปฏิบัติงานตั้งแต่เวลา <span class="dotted-line" style="min-width: 80px;">${item.startTime || ''}</span> น.
+                        ถึงเวลา <span class="dotted-line" style="min-width: 80px;">${item.endTime || ''}</span> น.
+                        มีร่วมผู้ปฏิบัติงาน ดังนี้
+                    </div>
+
+                    <!-- 2 Column Attending Staff List -->
+                    <div style="margin-bottom: 14px; padding-left: 10px;">
+                        <div style="display: flex; margin-bottom: 8px;">
+                            <div style="width: 50%;">๑. <span class="dotted-line" style="min-width: 240px;">${getStaffText(0)}</span></div>
+                            <div style="width: 50%;">๒. <span class="dotted-line" style="min-width: 240px;">${getStaffText(1)}</span></div>
+                        </div>
+                        <div style="display: flex; margin-bottom: 8px;">
+                            <div style="width: 50%;">๓. <span class="dotted-line" style="min-width: 240px;">${getStaffText(2)}</span></div>
+                            <div style="width: 50%;">๔. <span class="dotted-line" style="min-width: 240px;">${getStaffText(3)}</span></div>
+                        </div>
+                        <div style="display: flex; margin-bottom: 8px;">
+                            <div style="width: 50%;">๕. <span class="dotted-line" style="min-width: 240px;">${getStaffText(4)}</span></div>
+                            <div style="width: 50%;">๖. <span class="dotted-line" style="min-width: 240px;">${getStaffText(5)}</span></div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 12px; font-weight: bold;">
+                        พนักงานประจำรถไม่ออกร่วมปฏิบัติงาน มีดังนี้
+                    </div>
+
+                    <div style="margin-bottom: 10px; padding-left: 10px;">
+                        ๑. <span class="dotted-line" style="min-width: 250px;">${abs1.name}</span>
+                        สาเหตุเนื่องจาก <span class="dotted-line" style="min-width: 240px;">${abs1.reason}</span>
+                    </div>
+                    <div style="margin-bottom: 16px; padding-left: 10px;">
+                        ๒. <span class="dotted-line" style="min-width: 250px;">${abs2.name}</span>
+                        สาเหตุเนื่องจาก <span class="dotted-line" style="min-width: 240px;">${abs2.reason}</span>
+                    </div>
+
+                    <div style="margin-bottom: 12px;">
+                        ผลการปฏิบัติงาน <span class="dotted-line" style="min-width: 510px;">${item.workResult || ''}</span>
+                    </div>
+
+                    <div style="margin-bottom: 30px;">
+                        อุปสรรคและปัญหา <span class="dotted-line" style="min-width: 500px;">${item.problems || '-'}</span>
+                    </div>
+
+                    <!-- Signatures Block -->
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 10px;">
+                        <div style="width: 52%; font-size: 15pt; line-height: 1.5;">
+                            <div>เรียน หัวหน้า${item.targetStation || 'สถานีดับเพลิง...................................'}</div>
+                            <div style="text-indent: 2em;">เพื่อโปรดทราบ</div>
+                            <br>
+                            <div>ลงชื่อ ....................................................................</div>
+                            <div style="padding-left: 30px;">( .................................................................... )</div>
+                            <div>ตำแหน่ง หัวหน้าชุดเวรเตรียมพร้อม</div>
+                        </div>
+                        
+                        <div style="width: 45%; text-align: center; font-size: 15pt; line-height: 1.5;">
+                            <div style="height: 45px; display: flex; align-items: center; justify-content: center;">
+                                ${item.signatureImg ? `<img src="${item.signatureImg}" style="max-height: 45px; max-width: 180px; object-fit: contain;">` : ''}
+                            </div>
+                            <div>ลงชื่อ ....................................................................</div>
+                            <div>( <span style="display: inline-block; min-width: 160px; text-align: center;">${item.driverNameSigned || item.driverName || ''}</span> )</div>
+                            <div>ตำแหน่ง <span style="display: inline-block; min-width: 160px; text-align: center;">${item.driverPosition || 'พนักงานขับรถยนต์'}</span></div>
+                        </div>
+                    </div>
+                `;
+                renderArea.appendChild(page);
+            });
+
+            // html2pdf Options Calibration for A4 Single Page Fit
+            const opt = {
+                margin: 0,
+                filename: filename,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true, logging: false },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            showToast('กำลังสร้างเอกสาร PDF กรุณารอสักครู่...');
+            html2pdf().set(opt).from(renderArea).save().then(() => {
+                showToast('ส่งออกไฟล์ PDF สำเร็จเรียบร้อยแล้ว');
+            });
+        }
+    </script>
+</body>
+</html>
